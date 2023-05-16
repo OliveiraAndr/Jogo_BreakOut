@@ -25,18 +25,18 @@ velocidade_bola_y = -5
 
 bloco_largura = 55
 bloco_altura = 18
-padding_left = 5
-padding_top = 4
+padding_left = 2
+padding_top = 2
 linhas = 4
-colunas = 10
+colunas = 11
 bloco_lista = []
 
 def criar_blocos():
     for linha in range(linhas):
         for coluna in range(colunas):
-            x = ((padding_left * coluna) + padding_left) + \
+            x = ((padding_left * coluna)+ 5 + padding_left) + \
                 (coluna * bloco_largura)
-            y = ((padding_top * linha)+ 30 + padding_top) + (linha * bloco_altura)
+            y = ((padding_top * linha)+ 35 + padding_top) + (linha * bloco_altura)
             bloco = pygame.Rect(x, y, bloco_largura, bloco_altura)
             bloco_lista.append(bloco)
 
@@ -172,6 +172,6 @@ while True:
     vidas_fonte = pygame.font.Font(None, 30)
     vidas_texto = vidas_fonte.render(f"Vidas: {vidas}", True, (255, 0, 0))
     tela.blit(pontuacao_texto, (5, 5))
-    tela.blit(vidas_texto, (300, 5) )
+    tela.blit(vidas_texto, (200, 5) )
     
     pygame.display.update()
