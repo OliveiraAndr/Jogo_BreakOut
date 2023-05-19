@@ -20,8 +20,8 @@ x_prancha = 300
 y_prancha = 467
 
 # Velocidade da bola
-velocidade_bola_x = 5
-velocidade_bola_y = -5
+velocidade_bola_x = 0
+velocidade_bola_y = 0
 
 bloco_largura = 55
 bloco_altura = 18
@@ -31,20 +31,24 @@ linhas = 4
 colunas = 11
 bloco_lista = []
 
+
 def criar_blocos():
     for linha in range(linhas):
         for coluna in range(colunas):
-            x = ((padding_left * coluna)+ 5 + padding_left) + \
+            x = ((padding_left * coluna) + 5 + padding_left) + \
                 (coluna * bloco_largura)
-            y = ((padding_top * linha)+ 35 + padding_top) + (linha * bloco_altura)
+            y = ((padding_top * linha) + 35 + padding_top) + (linha * bloco_altura)
             bloco = pygame.Rect(x, y, bloco_largura, bloco_altura)
             bloco_lista.append(bloco)
+
 
 criar_blocos()
 
 pontuacao = 0
 vidas = 3
-
+# Boleano de lançamento da bola
+lancar_bola = False
+bola_lancada = False
 # Tela de início
 while True:
     for event in pygame.event.get():
@@ -80,7 +84,6 @@ while True:
             pygame.quit()
             exit()
 
-
 while True:
     relogio.tick(60)
     tela.fill((0, 0, 0))
@@ -88,33 +91,29 @@ while True:
         if event.type == QUIT:
             pygame.quit()
             exit()
-
-        # Verificar se a barra de espaço foi pressionada
-        if event.type == KEYDOWN and event.key == K_SPACE:
-            # Definir lancar_bola como True
+        
+        if not lancar_bola and pygame.key.get_pressed()[K_SPACE]:
             lancar_bola = True
-            # Reiniciar a posição da bola
-            velocidade_bola_x = 0
-            velocidade_bola_y = 0
-            velocidade_bola_x += velocidade_bola_x + 5
-            velocidade_bola_y -= velocidade_bola_y - 5
+            bola_lancada = True
+            velocidade_bola_x = 5
+            velocidade_bola_y = -5
             x_bola = 335
             y_bola = 460
             x_prancha = 300
             y_prancha = 467
-            break
-
-    if pygame.key.get_pressed()[K_a]:
-        x_prancha = x_prancha - 10
-    if pygame.key.get_pressed()[K_d]:
-        x_prancha = x_prancha + 10
+            
+    if bola_lancada:                
+        if pygame.key.get_pressed()[K_a]:
+            x_prancha = x_prancha - 10
+        if pygame.key.get_pressed()[K_d]:
+            x_prancha = x_prancha + 10
 
     # Atualiza a posição da bola
     x_bola += velocidade_bola_x
     y_bola += velocidade_bola_y
 
     # Verifica se a bola atingiu a parede esquerda ou direita
-    if x_bola < 10 or x_bola > largura -10:
+    if x_bola < 10 or x_bola > largura - 10:
         velocidade_bola_x = -velocidade_bola_x
 
     # Verifica se a bola atingiu o teto
@@ -131,13 +130,14 @@ while True:
         x_prancha = 300
         y_prancha = 467
         vidas -= 1
+        lancar_bola = False
+        bola_lancada = False
 
     for bloco in bloco_lista:
         if bloco.colliderect(pygame.Rect(x_bola, y_bola, 5, 5)):
             bloco_lista.remove(bloco)
             velocidade_bola_y = -velocidade_bola_y
             pontuacao += 10
-
 
     # Verifica se a bola atingiu a prancha
     if y_bola + 5 >= y_prancha and y_bola + 5 <= y_prancha + 10 and \
@@ -171,7 +171,83 @@ while True:
     pontuacao_texto = pontuacao_fonte.render(f"Pontuação: {pontuacao}", True, (255, 0, 0))
     vidas_fonte = pygame.font.Font(None, 30)
     vidas_texto = vidas_fonte.render(f"Vidas: {vidas}", True, (255, 0, 0))
-    tela.blit(pontuacao_texto, (5, 5))
-    tela.blit(vidas_texto, (200, 5) )
+    tela.blit(pontuacao_texto, (15, 5))
+    tela.blit(vidas_texto, (550, 5))
+
+
+    # Acrescentando gameover e menu pós game over
+    def menu_gameover():
+        while True:
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    pygame.quit()
+                    exit()
+
+            tela.fill((0, 0, 0))
+            fonte_game_over = pygame.font.SysFont(None, 64)
+            texto_game_over = fonte_game_over.render("Game Over", True, (255, 0, 0))
+            tela.blit(texto_game_over, (220, 130))
+            fonte_pontuacao_final = pygame.font.SysFont(None, 36)
+            texto_pontuacao_final = fonte_pontuacao_final.render(f"Pontuação final: {pontuacao}", True, (255, 0, 0))
+            tela.blit(texto_pontuacao_final, (220, 200))
+            fonte_opcoes = pygame.font.SysFont(None, 36)
+            texto_reiniciar = fonte_opcoes.render("Reiniciar", True, (255, 255, 255))
+            tela.blit(texto_reiniciar, (250, 260))
+            texto_sair = fonte_opcoes.render("Sair", True, (255, 255, 255))
+            tela.blit(texto_sair, (370, 260))
+            pygame.display.update()
+
+            if pygame.mouse.get_pressed()[0]:
+                posicao_mouse = pygame.mouse.get_pos()
+                if posicao_mouse[0] >= 250 and posicao_mouse[0] <= 370 \
+                        and posicao_mouse[1] >= 260 and posicao_mouse[1] <= 310:
+                    # Reiniciar jogo
+                    return
+                elif posicao_mouse[0] >= 360 and posicao_mouse[0] <= 420 \
+                        and posicao_mouse[1] >= 260 and posicao_mouse[1] <= 310:
+                    # Sair do jogo
+                    pygame.quit()
+                    exit()
+
+    if vidas == 0:
+        menu_gameover()
+        pontuacao = 0
+        vidas = 3
+        criar_blocos()
+     # Acrescentando Vitoria e menu pós vitoria
+    def menu_vitoria():
+        while True:
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    pygame.quit()
+                    exit()
+
+            tela.fill((0, 0, 0))
+            fonte_nivel_clean = pygame.font.SysFont(None, 64)
+            texto_nivel_clean = fonte_nivel_clean.render(F"Congratulations", True, (255, 255, 255))
+            tela.blit(texto_nivel_clean, (160, 130))
+            fonte_pontuacao_final = pygame.font.SysFont(None, 36)
+            texto_pontuacao_final = fonte_pontuacao_final.render(f"Pontuação final: {pontuacao}", True, (255, 0, 0))
+            tela.blit(texto_pontuacao_final, (220, 200))
+            fonte_opcoes = pygame.font.SysFont(None, 36)
+            texto_reiniciar = fonte_opcoes.render("Reiniciar", True, (255, 255, 255))
+            tela.blit(texto_reiniciar, (250, 260))
+            texto_sair = fonte_opcoes.render("Sair", True, (255, 255, 255))
+            tela.blit(texto_sair, (370, 260))
+            pygame.display.update()
+
+            if pygame.mouse.get_pressed()[0]:
+                posicao_mouse = pygame.mouse.get_pos()
+                if posicao_mouse[0] >= 250 and posicao_mouse[0] <= 370 \
+                        and posicao_mouse[1] >= 260 and posicao_mouse[1] <= 310:
+                    # Reiniciar jogo
+                    return
+                elif posicao_mouse[0] >= 360 and posicao_mouse[0] <= 420 \
+                        and posicao_mouse[1] >= 260 and posicao_mouse[1] <= 310:
+                    # Sair do jogo
+                    pygame.quit()
+                    exit()
+    if len(bloco_lista) == 0:
+        menu_vitoria()
     
     pygame.display.update()
