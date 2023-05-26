@@ -3,6 +3,23 @@ from pygame.locals import *
 from sys import exit
 
 pygame.init()
+# condições de som
+game_start = pygame.mixer.music.load('game-start.mp3')
+pygame.mixer.music.play(1)
+musica_fundo = pygame.mixer.Sound('fundo1.mp3')
+musica_fundo.set_volume(0.2)
+musica_kick = pygame.mixer.Sound('smw_kick.mp3')
+musica_kick.set_volume(0.25)
+musica_pancada = pygame.mixer.Sound('pancada.mp3')
+musica_pancada.set_volume(0.3)
+musica_fail = pygame.mixer.Sound('fail.mp3')
+musica_fail.set_volume(0.5)
+musica_game_over = pygame.mixer.Sound('game-over.mp3')
+musica_game_over.set_volume(1)
+musica_win = pygame.mixer.Sound('win.mp3')
+musica_win.set_volume(1)
+musica_click = pygame.mixer.Sound('click-button.mp3')
+musica_click.set_volume(0.5)
 
 largura = 640
 altura = 480
@@ -61,14 +78,14 @@ while True:
     pygame.draw.rect(tela, (255, 255, 255), (100, 100, 440, 200), 2)
     pygame.draw.rect(tela, (255, 255, 255), (120, 250, 200, 50))
     pygame.draw.rect(tela, (255, 255, 255), (320, 250, 200, 50))
-    fonte_titulo = pygame.font.SysFont(None, 64)
+    fonte_titulo = pygame.font.SysFont('Arial', 64, bold=True)
     texto_titulo = fonte_titulo.render("Breakout", True, (255, 0, 0))
-    tela.blit(texto_titulo, (180, 130))
-    fonte_opcoes = pygame.font.SysFont(None, 36)
+    tela.blit(texto_titulo, (190, 130))
+    fonte_opcoes = pygame.font.SysFont('Arial', 36, bold=True)
     texto_jogar = fonte_opcoes.render("Jogar", True, (255, 0, 0))
-    tela.blit(texto_jogar, (185, 260))
+    tela.blit(texto_jogar, (185, 250))
     texto_sair = fonte_opcoes.render("Sair", True, (255, 0, 0))
-    tela.blit(texto_sair, (385, 260))
+    tela.blit(texto_sair, (385, 250))
     pygame.display.update()
 
     # Verifique se o jogador selecionou uma opção
@@ -76,11 +93,16 @@ while True:
         posicao_mouse = pygame.mouse.get_pos()
         if posicao_mouse[0] >= 120 and posicao_mouse[0] <= 320 \
                 and posicao_mouse[1] >= 250 and posicao_mouse[1] <= 300:
-            # Inicie o jogo
+            # Inicia o jogo
+            musica_click.play()
+            pygame.time.wait(250)
+            musica_fundo.play(-1)
             break
         elif posicao_mouse[0] >= 320 and posicao_mouse[0] <= 520 \
                 and posicao_mouse[1] >= 250 and posicao_mouse[1] <= 300:
-            # Saia do jogo
+            # Sai do jogo
+            musica_click.play()
+            pygame.time.wait(500)
             pygame.quit()
             exit()
 
@@ -91,7 +113,7 @@ while True:
         if event.type == QUIT:
             pygame.quit()
             exit()
-        
+
         if not lancar_bola and pygame.key.get_pressed()[K_SPACE]:
             lancar_bola = True
             bola_lancada = True
@@ -101,8 +123,8 @@ while True:
             y_bola = 460
             x_prancha = 300
             y_prancha = 467
-            
-    if bola_lancada:                
+
+    if bola_lancada:
         if pygame.key.get_pressed()[K_a]:
             x_prancha = x_prancha - 10
         if pygame.key.get_pressed()[K_d]:
@@ -115,14 +137,16 @@ while True:
     # Verifica se a bola atingiu a parede esquerda ou direita
     if x_bola < 10 or x_bola > largura - 10:
         velocidade_bola_x = -velocidade_bola_x
+        musica_kick.play()
 
     # Verifica se a bola atingiu o teto
     if y_bola < 40:
         velocidade_bola_y = -velocidade_bola_y
         y_bola = 40
+        musica_kick.play()
 
     # Verifica se a bola atingiu o chão
-    if y_bola >= 470:
+    if y_bola >= 475:
         velocidade_bola_y = 0
         velocidade_bola_x = 0
         x_bola = 335
@@ -132,17 +156,25 @@ while True:
         vidas -= 1
         lancar_bola = False
         bola_lancada = False
+        musica_fundo.stop()
+        if vidas > 0: #avaliar se tira esse if ###########################
+            musica_fail.play()
+            pygame.time.wait(1000)
+            musica_fundo.play(-1)
+            
 
     for bloco in bloco_lista:
         if bloco.colliderect(pygame.Rect(x_bola, y_bola, 5, 5)):
             bloco_lista.remove(bloco)
             velocidade_bola_y = -velocidade_bola_y
             pontuacao += 10
+            musica_pancada.play()
 
     # Verifica se a bola atingiu a prancha
     if y_bola + 5 >= y_prancha and y_bola + 5 <= y_prancha + 10 and \
             x_bola >= x_prancha and x_bola <= x_prancha + 70:
         velocidade_bola_y = -velocidade_bola_y
+        musica_kick.play()
 
     # Atualiza a posição da prancha
     prancha = pygame.Rect(x_prancha, y_prancha, 70, 10)
@@ -160,10 +192,8 @@ while True:
     pygame.draw.rect(tela, (255, 255, 255), prancha)
     # Desenhe a parede esquerda
     pygame.draw.rect(tela, (255, 255, 255), (0, 0, margem, altura))
-
     # Desenhe a parede direita
     pygame.draw.rect(tela, (255, 255, 255), (largura - margem, 0, margem, altura))
-
     # Desenhe o teto
     pygame.draw.rect(tela, (255, 255, 255), (0, 30, largura, margem))
     # Desenha a pontuação na tela
@@ -174,9 +204,9 @@ while True:
     tela.blit(pontuacao_texto, (15, 5))
     tela.blit(vidas_texto, (550, 5))
 
-
     # Acrescentando gameover e menu pós game over
     def menu_gameover():
+        musica_game_over.play()
         while True:
             for event in pygame.event.get():
                 if event.type == QUIT:
@@ -197,31 +227,48 @@ while True:
             tela.blit(texto_sair, (370, 260))
             pygame.display.update()
 
+
             if pygame.mouse.get_pressed()[0]:
                 posicao_mouse = pygame.mouse.get_pos()
                 if posicao_mouse[0] >= 250 and posicao_mouse[0] <= 370 \
                         and posicao_mouse[1] >= 260 and posicao_mouse[1] <= 310:
                     # Reiniciar jogo
+                    musica_click.play()
+                    pygame.time.wait(250)
+                    musica_fundo.play(-1)
                     return
                 elif posicao_mouse[0] >= 360 and posicao_mouse[0] <= 420 \
                         and posicao_mouse[1] >= 260 and posicao_mouse[1] <= 310:
                     # Sair do jogo
+                    musica_click.play()
+                    pygame.time.wait(500)
                     pygame.quit()
                     exit()
 
+
     if vidas == 0:
+        
+        musica_fundo.stop()
+        pygame.time.wait(1000)
         menu_gameover()
         pontuacao = 0
         vidas = 3
+        bloco_lista=[]
         criar_blocos()
-     # Acrescentando Vitoria e menu pós vitoria
+
+
+
+
+
+    # Acrescentando Vitoria e menu pós vitoria
     def menu_vitoria():
+        musica_win.play()
         while True:
             for event in pygame.event.get():
                 if event.type == QUIT:
                     pygame.quit()
                     exit()
-
+            
             tela.fill((0, 0, 0))
             fonte_nivel_clean = pygame.font.SysFont(None, 64)
             texto_nivel_clean = fonte_nivel_clean.render(F"Congratulations", True, (255, 255, 255))
@@ -241,13 +288,23 @@ while True:
                 if posicao_mouse[0] >= 250 and posicao_mouse[0] <= 370 \
                         and posicao_mouse[1] >= 260 and posicao_mouse[1] <= 310:
                     # Reiniciar jogo
+                    musica_click.play()
+                    pygame.time.wait(250)
+                    musica_fundo.play(-1)
                     return
                 elif posicao_mouse[0] >= 360 and posicao_mouse[0] <= 420 \
                         and posicao_mouse[1] >= 260 and posicao_mouse[1] <= 310:
                     # Sair do jogo
+                    musica_click.play()
+                    pygame.time.wait(500)
                     pygame.quit()
                     exit()
+
+
     if len(bloco_lista) == 0:
+        musica_fundo.stop()
+        pygame.time.wait(1000)
         menu_vitoria()
-    
+        
+        
     pygame.display.update()
