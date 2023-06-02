@@ -32,6 +32,9 @@ start_time = 0
 tempo = 0
 contando = False
 margem = 5
+lvl = 1
+stage = 1
+
 
 # posição bola
 x_bola = 335
@@ -48,8 +51,8 @@ bloco_largura = 55
 bloco_altura = 18
 padding_left = 2
 padding_top = 2
-linhas = 4
-colunas = 11
+linhas = 1
+colunas = 1
 bloco_lista = []
 
 
@@ -75,7 +78,7 @@ def format_time(time):
     return tempo_formatado
 
 def new_lvl():
-    global vidas, linhas, velocidade_bola_x, velocidade_bola_y, x_bola, y_bola, x_prancha, y_prancha, lancar_bola, bola_lancada
+    global vidas, linhas, velocidade_bola_x, velocidade_bola_y, x_bola, y_bola, x_prancha, y_prancha, lancar_bola, bola_lancada, lvl
     vidas += 1
     linhas += 1    
     velocidade_bola_y = 0
@@ -86,6 +89,8 @@ def new_lvl():
     y_prancha = 467
     lancar_bola = False
     bola_lancada = False
+    lvl += 1
+    
 pontuacao = 0
 vidas = 3
 # Boleano de lançamento da bola
@@ -259,6 +264,11 @@ while True:
     vidas_fonte = pygame.font.Font(None, 30)
     vidas_texto = vidas_fonte.render(f"Vidas: {vidas}", True, (255, 0, 0))   
     tela.blit(vidas_texto, (550, 5))
+
+    # VIDAS
+    lvl_fonte = pygame.font.Font(None, 30)
+    lvl_texto = lvl_fonte.render(f"{stage}-{lvl}", True, (255, 0, 0))   
+    tela.blit(lvl_texto, (250, 5))
 
     # Acrescentando gameover e menu pós game over
     def menu_gameover():
