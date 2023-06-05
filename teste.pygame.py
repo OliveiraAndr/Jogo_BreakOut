@@ -3,31 +3,34 @@ import time
 import random
 from pygame.locals import *
 from sys import exit
-
+import os
 ##### INICIA O PYGAME ######################################################
 pygame.init()
+##### CRIAÇÃO DE DIRETORIO #################################################
+diretorio_principal = os.path.dirname(__file__)
+diretorio_sons = os.path.join(diretorio_principal, 'Som')
 ##### CONDIÇÕES DE SOM #####################################################
-game_start = pygame.mixer.music.load('game-start.mp3')
+game_start = pygame.mixer.music.load(os.path.join(diretorio_sons,'game-start.mp3'))
 pygame.mixer.music.play(1)
-musica_fundo = pygame.mixer.Sound('fundo1.mp3')
+musica_fundo = pygame.mixer.Sound(os.path.join(diretorio_sons,'fundo1.mp3'))
 musica_fundo.set_volume(0.2)
-musica_kick = pygame.mixer.Sound('smw_kick.mp3')
+musica_kick = pygame.mixer.Sound(os.path.join(diretorio_sons,'smw_kick.mp3'))
 musica_kick.set_volume(0.25)
-musica_pancada = pygame.mixer.Sound('pancada.mp3')
+musica_pancada = pygame.mixer.Sound(os.path.join(diretorio_sons,'pancada.mp3'))
 musica_pancada.set_volume(0.3)
-musica_fail = pygame.mixer.Sound('fail.mp3')
+musica_fail = pygame.mixer.Sound(os.path.join(diretorio_sons,'fail.mp3'))
 musica_fail.set_volume(0.5)
-musica_game_over = pygame.mixer.Sound('game-over.mp3')
+musica_game_over = pygame.mixer.Sound(os.path.join(diretorio_sons,'game-over.mp3'))
 musica_game_over.set_volume(1)
-musica_win = pygame.mixer.Sound('win.mp3')
+musica_win = pygame.mixer.Sound(os.path.join(diretorio_sons,'win.mp3'))
 musica_win.set_volume(1)
-musica_click = pygame.mixer.Sound('click-button.mp3')
+musica_click = pygame.mixer.Sound(os.path.join(diretorio_sons,'click-button.mp3'))
 musica_click.set_volume(0.5)
-musica_lvl = pygame.mixer.Sound('level-passed.mp3')
+musica_lvl = pygame.mixer.Sound(os.path.join(diretorio_sons,'level-passed.mp3'))
 musica_lvl.set_volume(1)
-musica_clap = pygame.mixer.Sound('claps.mp3')
+musica_clap = pygame.mixer.Sound(os.path.join(diretorio_sons,'claps.mp3'))
 musica_clap.set_volume(0.5)
-musica_exit = pygame.mixer.Sound('door-closing.mp3')
+musica_exit = pygame.mixer.Sound(os.path.join(diretorio_sons,'door-closing.mp3'))
 musica_exit.set_volume(1)
 ##### VARIÁVEIS DO JOGO ###################################################
 largura = 640
