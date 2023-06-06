@@ -1,6 +1,6 @@
 import cx_Freeze
 
-executables = [cx_Freeze.Executable('Breakout.py')]
+executables = [cx_Freeze.Executable('teste.pygame.py')]
 
 cx_Freeze.setup(
     name="Breakout GAME",
@@ -10,3 +10,10 @@ cx_Freeze.setup(
     executables = executables
     
 )
+
+# No cmd instalar o cx-Freeze 
+# 'cx-Freeze'
+# Abrir diretorio da pasta no cmd
+# 'cd + diretorio da pasta'
+# Executar para criar o executável do jogo
+# 'python setup.py build'
