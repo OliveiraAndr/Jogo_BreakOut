@@ -152,9 +152,9 @@ def menu_gameover():
             pygame.draw.rect(tela, (200, 0, 0), (100, 250, 220, 50), 3)
             pygame.draw.rect(tela, (200, 0, 0), (320, 250, 220, 50), 3)
 
-            fonte_game_over = pygame.font.SysFont('Arial', 68, bold=True)
+            fonte_game_over = pygame.font.SysFont('Arial', 64, bold=True)
             texto_game_over = fonte_game_over.render("GAME OVER", True, (255, 0, 0)) # Game over
-            tela.blit(texto_game_over, (150, 105))
+            tela.blit(texto_game_over, (125, 105))
 
             fonte_pontuacao_final = pygame.font.SysFont('Arial', 30, bold=True)
             texto_pontuacao_final = fonte_pontuacao_final.render(f"Pontuação final: {pontuacao}", True, (255, 255, 255)) # Pontuação
@@ -206,7 +206,7 @@ def menu_vitoria():
 
             fonte_nivel_clean = pygame.font.SysFont('Arial', 68, bold=True)
             texto_nivel_clean = fonte_nivel_clean.render(F"YOU WON!", True, (255, 255, 255)) # You won!
-            tela.blit(texto_nivel_clean, (170, 105))
+            tela.blit(texto_nivel_clean, (140, 105))
 
             fonte_pontuacao_final = pygame.font.SysFont('Arial', 30, bold=True)
             texto_pontuacao_final = fonte_pontuacao_final.render(f"Pontuação: {pontuacao}", True, (255, 255, 255)) # Pontuação
@@ -257,14 +257,14 @@ def menu_nxt_lvl():
 
             fonte_nivel_clean = pygame.font.SysFont('Arial', 60, bold=True)
             texto_nivel_clean = fonte_nivel_clean.render(F"COMPLETED", True, (255, 255, 255)) #Completed level
-            tela.blit(texto_nivel_clean, (170, 110))
+            tela.blit(texto_nivel_clean, (140, 110))
 
             texto_nivel_clean = fonte_nivel_clean.render(F"LEVEL", True, (255, 255, 255)) #Completed level
             tela.blit(texto_nivel_clean, (240, 170))
 
             fonte_opcoes = pygame.font.SysFont('Arial', 36, bold=True)
             texto_reiniciar = fonte_opcoes.render("Next level", True, (255, 255, 255)) # Next level
-            tela.blit(texto_reiniciar, (150, 252))
+            tela.blit(texto_reiniciar, (140, 252))
 
             texto_sair = fonte_opcoes.render("Exit", True, (255, 255, 255)) # Exit
             tela.blit(texto_sair, (400, 252))
@@ -302,7 +302,7 @@ while True:
 
     fonte_titulo = pygame.font.SysFont('Arial', 64, bold=True)
     texto_titulo = fonte_titulo.render("BREAKOUT", True, (255, 255, 255)) # Breakout
-    tela.blit(texto_titulo, (170, 130))
+    tela.blit(texto_titulo, (150, 130))
     
     fonte_opcoes = pygame.font.SysFont('Arial', 36, bold=True) # Start
     texto_jogar = fonte_opcoes.render("Start", True, (255, 255, 255))
